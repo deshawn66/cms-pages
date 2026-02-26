@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback Recorded - CMS Refi Engine</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f0f4f8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; }
+    .container { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header p { font-size: 13px; font-weight: 600; color: #1a365d; letter-spacing: 1px; }
+    .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .banner { padding: 32px 24px; text-align: center; }
+    .icon-circle { width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+    .icon-circle span { font-size: 32px; }
+    .banner h1 { color: white; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .banner p { color: rgba(255,255,255,0.9); font-size: 14px; }
+    .details { padding: 24px; }
+    .greeting { color: #718096; font-size: 13px; margin-bottom: 16px; }
+    .info-table { background: #f7fafc; border-radius: 10px; padding: 16px; }
+    .info-table table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .info-table td { padding: 6px 0; }
+    .info-table td:first-child { color: #718096; width: 100px; }
+    .info-table td:last-child { color: #1a202c; }
+    .info-table tr + tr td { border-top: 1px solid #edf2f7; }
+    .info-table .value { font-weight: 600; }
+    .savings { color: #38a169; font-size: 16px; font-weight: 700; }
+    .arrow { color: #38a169; }
+    .followup { margin-top: 20px; padding-top: 20px; border-top: 1px solid #edf2f7; }
+    .followup p { font-size: 13px; font-weight: 600; color: #2d3748; margin-bottom: 12px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .btn { flex: 1; min-width: 120px; display: block; padding: 10px 8px; color: white; text-decoration: none; border-radius: 8px; text-align: center; font-size: 13px; font-weight: 600; }
+    .btn-gold { background: #d69e2e; }
+    .btn-blue { background: #3182ce; }
+    .btn-gray { background: #edf2f7; color: #4a5568; }
+    .btn-red-outline { background: #edf2f7; color: #e53e3e; }
+    .footer { text-align: center; color: #a0aec0; font-size: 11px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><p>CMS REFI ENGINE</p></div>
+    <div class="card">
+      <div class="banner" id="banner">
+        <div class="icon-circle"><span id="icon"></span></div>
+        <h1 id="title"></h1>
+        <p id="message"></p>
+      </div>
+      <div class="details">
+        <p class="greeting" id="greeting"></p>
+        <div class="info-table">
+          <table>
+            <tr><td>Client</td><td class="value" id="client"></td></tr>
+            <tr><td>Address</td><td id="address"></td></tr>
+            <tr><td>Rate</td><td id="rate"></td></tr>
+            <tr><td>Savings</td><td><span class="savings" id="savings"></span></td></tr>
+          </table>
+        </div>
+        <div class="followup" id="followup" style="display:none">
+          <p>How did the call go?</p>
+          <div class="btn-row">
+            <a class="btn btn-gold" id="btn-interested">Client Interested</a>
+            <a class="btn btn-blue" id="btn-progress">App In Progress</a>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-gray" id="btn-not-interested">Not Interested</a>
+            <a class="btn btn-red-outline" id="btn-already-refied">Already Refied</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="footer">CMS Mortgage Solutions | Refi Opportunity Engine</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status') || 'CONTACTED';
+    const client = params.get('client') || '';
+    const address = params.get('address') || 'N/A';
+    const lo = params.get('lo') || '';
+    const currentRate = params.get('current_rate') || '';
+    const marketRate = params.get('market_rate') || '';
+    const rateDrop = params.get('rate_drop') || '';
+    const savings = params.get('savings') || '';
+    const oppId = params.get('opp_id') || '';
+    const firstName = lo.split(' ')[0];
+
+    const config = {
+      CONTACTED: { color: '#38a169', icon: '\u260E', title: 'Contacted', message: "Great! We've logged that you reached out to this client." },
+      ALREADY_REFIED: { color: '#e53e3e', icon: '\u2714', title: 'Already Refinanced', message: "Thanks for letting us know. This client has been removed from future refi reports." },
+      NOT_INTERESTED: { color: '#718096', icon: '\u274C', title: 'Not Interested', message: "Got it. We'll keep monitoring in case rates drop further." },
+      INTERESTED: { color: '#d69e2e', icon: '\u2B50', title: 'Client Interested', message: "Excellent! We've marked this as a hot lead." },
+      IN_PROGRESS: { color: '#3182ce', icon: '\u2699', title: 'In Progress', message: "Marked as in progress. Good luck closing this one!" },
+    };
+
+    const c = config[status] || config.CONTACTED;
+    document.getElementById('banner').style.background = c.color;
+    document.getElementById('icon').textContent = c.icon;
+    document.getElementById('title').textContent = c.title;
+    document.getElementById('message').textContent = c.message;
+    document.getElementById('greeting').textContent = firstName ? 'Thanks, ' + firstName + "! Here's what we recorded:" : "Here's what we recorded:";
+    document.getElementById('client').textContent = client;
+    document.getElementById('address').textContent = address;
+    document.getElementById('rate').innerHTML = currentRate + '% <span class="arrow">\u2192</span> ' + marketRate + '%';
+    document.getElementById('savings').textContent = savings + '/mo';
+
+    // Build feedback base URL (edge function)
+    const feedbackBase = window.location.origin + '/functions/v1/refi-feedback';
+    if (status === 'CONTACTED' && oppId) {
+      document.getElementById('followup').style.display = 'block';
+      document.getElementById('btn-interested').href = feedbackBase + '?opp_id=' + oppId + '&status=INTERESTED';
+      document.getElementById('btn-progress').href = feedbackBase + '?opp_id=' + oppId + '&status=IN_PROGRESS';
+      document.getElementById('btn-not-interested').href = feedbackBase + '?opp_id=' + oppId + '&status=NOT_INTERESTED';
+      document.getElementById('btn-already-refied').href = feedbackBase + '?opp_id=' + oppId + '&status=ALREADY_REFIED';
+    }
+  </script>
+</body>
+</html>
