@@ -86,6 +86,17 @@
     const oppId = params.get('opp_id') || '';
     const firstName = lo.split(' ')[0];
 
+    // Handle error state
+    const errorMsg = params.get('error');
+    if (errorMsg) {
+      document.getElementById('banner').style.background = '#e53e3e';
+      document.getElementById('icon').textContent = '\u26A0';
+      document.getElementById('title').textContent = 'Something Went Wrong';
+      document.getElementById('message').textContent = errorMsg;
+      document.querySelector('.info-table').style.display = 'none';
+      document.getElementById('greeting').textContent = 'Please try again from your email, or contact your admin.';
+    }
+
     const config = {
       CONTACTED: { color: '#38a169', icon: '\u260E', title: 'Contacted', message: "Great! We've logged that you reached out to this client." },
       ALREADY_REFIED: { color: '#e53e3e', icon: '\u2714', title: 'Already Refinanced', message: "Thanks for letting us know. This client has been removed from future refi reports." },
@@ -105,9 +116,9 @@
     document.getElementById('rate').innerHTML = currentRate + '% <span class="arrow">\u2192</span> ' + marketRate + '%';
     document.getElementById('savings').textContent = savings + '/mo';
 
-    // Build feedback base URL (edge function)
-    const feedbackBase = window.location.origin + '/functions/v1/refi-feedback';
-    if (status === 'CONTACTED' && oppId) {
+    // Build feedback base URL (passed from edge function redirect)
+    const feedbackBase = params.get('feedback_base') || '';
+    if (status === 'CONTACTED' && oppId && feedbackBase) {
       document.getElementById('followup').style.display = 'block';
       document.getElementById('btn-interested').href = feedbackBase + '?opp_id=' + oppId + '&status=INTERESTED';
       document.getElementById('btn-progress').href = feedbackBase + '?opp_id=' + oppId + '&status=IN_PROGRESS';
