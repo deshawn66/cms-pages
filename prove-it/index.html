@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Prove It Challenge | CMS Mortgage Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-2: #111c33;
+      --navy-3: #17223a;
+      --gold: #f59e0b;
+      --gold-dark: #d97706;
+      --gold-soft: #fff7ed;
+      --white: #ffffff;
+      --ink: #111827;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --surface: #f8fafc;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --gray-soft: #f1f5f9;
+      --red: #dc2626;
+      --shadow: 0 24px 70px rgba(15, 23, 42, .18);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--navy);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .hidden { display: none !important; }
+
+    .landing, .completion {
+      min-height: 100vh;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(245, 158, 11, .22), transparent 30%),
+        radial-gradient(circle at 82% 8%, rgba(59, 130, 246, .12), transparent 34%),
+        linear-gradient(135deg, #08111f 0%, var(--navy) 50%, #111827 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .landing::before, .completion::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+      pointer-events: none;
+    }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; position: relative; z-index: 1; }
+    .topnav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0;
+      gap: 20px;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      background: linear-gradient(135deg, #fbbf24, var(--gold));
+      box-shadow: 0 12px 30px rgba(245, 158, 11, .35);
+      font-weight: 900;
+    }
+    .nav-email { color: rgba(255,255,255,.78); font-weight: 700; font-size: 14px; }
+
+    .hero {
+      padding: clamp(72px, 10vw, 132px) 0 74px;
+      max-width: 930px;
+    }
+    .eyebrow {
+      color: var(--gold);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: clamp(46px, 8.5vw, 92px);
+      line-height: .92;
+      letter-spacing: -.075em;
+      margin: 0 0 24px;
+    }
+    .hero p {
+      color: rgba(255,255,255,.82);
+      font-size: clamp(19px, 2.5vw, 27px);
+      line-height: 1.42;
+      max-width: 750px;
+      margin: 0 0 34px;
+      font-weight: 600;
+    }
+    .start-panel {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .name-input {
+      min-width: min(360px, 100%);
+      background: rgba(255,255,255,.08);
+      color: white;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding: 17px 18px;
+      outline: none;
+      font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .name-input::placeholder { color: rgba(255,255,255,.45); }
+    .primary-btn, .secondary-btn {
+      border: 0;
+      border-radius: 16px;
+      padding: 17px 22px;
+      font-weight: 900;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, opacity .2s ease;
+    }
+    .primary-btn {
+      color: #111827;
+      background: linear-gradient(135deg, #fbbf24, var(--gold));
+      box-shadow: 0 18px 38px rgba(245, 158, 11, .35);
+    }
+    .primary-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 24px 50px rgba(245, 158, 11, .45); }
+    .secondary-btn {
+      color: white;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .primary-btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+    .form-error { color: #fecaca; font-weight: 700; min-height: 22px; }
+
+    .steps, .about-card {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 38px;
+    }
+    .steps { grid-template-columns: repeat(3, 1fr); }
+    .step, .about-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+    }
+    .step-num { color: var(--gold); font-weight: 900; font-size: 32px; margin-bottom: 10px; }
+    .step h3, .about-card h2 { margin: 0 0 8px; letter-spacing: -.04em; }
+    .step p, .about-card p { margin: 0; color: rgba(255,255,255,.72); line-height: 1.6; font-weight: 500; }
+    .footer { color: rgba(255,255,255,.65); padding: 30px 0 44px; font-weight: 700; }
+
+    .game {
+      display: none;
+      min-height: 100vh;
+      background: var(--surface);
+      padding-bottom: 108px;
+    }
+    .game.active { display: block; animation: fadeIn .35s ease both; }
+    .game-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+    }
+    .bar-inner {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 22px;
+      align-items: center;
+    }
+    .game-logo { color: var(--navy); }
+    .level-indicator, .timer {
+      font-weight: 900;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .progress-dots { display: flex; gap: 9px; }
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 99px;
+      background: #cbd5e1;
+      transition: all .2s ease;
+    }
+    .dot.done { background: var(--gold); width: 28px; box-shadow: 0 0 0 4px rgba(245,158,11,.13); }
+
+    .game-main {
+      width: min(860px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 42px 0 24px;
+    }
+    .level {
+      display: none;
+      animation: slideFade .35s ease both;
+    }
+    .level.active { display: block; }
+    .level-head {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: clamp(24px, 4vw, 38px);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .level-tag { color: var(--gold-dark); font-weight: 900; text-transform: uppercase; letter-spacing: .14em; font-size: 12px; margin-bottom: 10px; }
+    h2 {
+      font-size: clamp(31px, 5vw, 52px);
+      line-height: .98;
+      letter-spacing: -.065em;
+      margin: 0 0 14px;
+      color: var(--navy);
+    }
+    .level-head p { margin: 0; color: var(--muted); font-size: 18px; line-height: 1.55; font-weight: 600; }
+    .quote {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-left: 5px solid var(--gold);
+      background: var(--gold-soft);
+      border-radius: 14px;
+      color: #78350f;
+      font-weight: 900;
+    }
+    .data-card, .input-card, .stat-card, .lo-card, .initiative-card, .phase-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, .08);
+      margin-bottom: 18px;
+    }
+    .data-card h3, .input-card h3 { margin: 0 0 16px; color: var(--navy); letter-spacing: -.04em; }
+    .table-scroll { overflow-x: auto; border-radius: 16px; border: 1px solid var(--line); }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; background: white; }
+    th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; }
+    th { background: #f8fafc; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    tr:last-child td { border-bottom: 0; }
+    .metrics-grid, .marketing-grid, .jordan-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .metric, .marketing-metric, .jordan-stat {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .metric strong, .marketing-metric strong, .jordan-stat strong { display: block; color: var(--navy); font-size: 22px; letter-spacing: -.04em; margin-bottom: 4px; }
+    .metric span, .marketing-metric span, .jordan-stat span { color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.35; }
+    label { display: block; font-weight: 900; color: var(--navy); margin-bottom: 9px; }
+    textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 15px 16px;
+      outline: none;
+      transition: border .2s ease, box-shadow .2s ease;
+      background: white;
+      color: var(--ink);
+    }
+    textarea { min-height: 132px; resize: vertical; line-height: 1.55; }
+    textarea:focus, input[type="text"]:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(245,158,11,.13); }
+    .hint { color: var(--muted); font-size: 13px; margin-top: 7px; font-weight: 700; }
+    .error-line { color: var(--red); font-size: 14px; font-weight: 800; margin-top: 12px; min-height: 20px; }
+
+    .lo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
+    .lo-card { margin: 0; transition: border .2s ease, transform .2s ease, box-shadow .2s ease; }
+    .lo-card:hover { transform: translateY(-2px); }
+    .lo-card.protect { border-color: rgba(22,163,74,.45); box-shadow: 0 18px 42px rgba(22,163,74,.12); }
+    .lo-card.activate { border-color: rgba(245,158,11,.6); box-shadow: 0 18px 42px rgba(245,158,11,.14); }
+    .lo-card.evaluate { border-color: rgba(100,116,139,.45); box-shadow: 0 18px 42px rgba(100,116,139,.12); }
+    .lo-card h3 { margin: 0 0 12px; color: var(--navy); letter-spacing: -.04em; }
+    .lo-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+    .lo-facts div { background: #f8fafc; border-radius: 12px; padding: 10px; font-size: 13px; color: var(--muted); font-weight: 700; }
+    .lo-facts strong { display: block; color: var(--navy); font-size: 17px; }
+    .choice-row, .medium-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill-btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: #334155;
+      border-radius: 999px;
+      padding: 10px 13px;
+      font-weight: 900;
+      transition: all .15s ease;
+    }
+    .pill-btn:hover, .pill-btn.active { transform: translateY(-1px); }
+    .pill-btn.protect.active { background: var(--green-soft); color: #14532d; border-color: rgba(22,163,74,.35); }
+    .pill-btn.activate.active, .pill-btn.medium.active { background: var(--gold-soft); color: #92400e; border-color: rgba(245,158,11,.45); }
+    .pill-btn.evaluate.active { background: var(--gray-soft); color: #334155; border-color: #94a3b8; }
+    .jordan-card {
+      background: linear-gradient(135deg, #111827, #172554);
+      color: white;
+      border-radius: 26px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    .jordan-card h3 { margin: 0 0 16px; font-size: 26px; letter-spacing: -.04em; }
+    .jordan-stat { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.12); }
+    .jordan-stat strong { color: var(--gold); }
+    .jordan-stat span { color: rgba(255,255,255,.72); }
+    .reminder { background: #fff7ed; color: #78350f; border: 1px solid #fed7aa; border-radius: 16px; padding: 15px 16px; font-weight: 900; line-height: 1.45; margin: 14px 0; }
+    .counter { text-align: right; color: var(--muted); font-weight: 800; margin-top: 8px; }
+    .counter.bad { color: var(--red); }
+    .initiative-grid { display: grid; gap: 16px; }
+    .initiative-card h3, .phase-card h3 { margin: 0 0 14px; color: var(--navy); letter-spacing: -.04em; }
+    .phase-card { border-left: 8px solid var(--gold); }
+    .phase-card.green { border-left-color: var(--green); }
+    .phase-card.blue { border-left-color: #2563eb; }
+    .proof-number {
+      background: linear-gradient(135deg, var(--gold-soft), #fef3c7);
+      border: 2px solid rgba(245,158,11,.45);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -18px 50px rgba(15,23,42,.12);
+    }
+    .bottom-inner {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .autosave { color: var(--muted); font-weight: 900; display: flex; align-items: center; gap: 9px; }
+    .pulse { width: 9px; height: 9px; background: var(--green); border-radius: 999px; box-shadow: 0 0 0 0 rgba(22,163,74,.5); animation: pulse 1.6s infinite; }
+
+    .resume-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(15,23,42,.76);
+      display: none;
+      place-items: center;
+      padding: 20px;
+    }
+    .resume-modal.active { display: grid; }
+    .modal-card {
+      width: min(480px, 100%);
+      background: white;
+      color: var(--ink);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 30px 100px rgba(0,0,0,.32);
+    }
+    .modal-card h2 { font-size: 32px; }
+    .modal-card p { color: var(--muted); line-height: 1.6; font-weight: 600; }
+    .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .light-btn { border: 1px solid var(--line); background: white; color: var(--navy); border-radius: 14px; padding: 14px 16px; font-weight: 900; }
+
+    .completion { display: none; padding: 44px 0 70px; }
+    .completion.active { display: block; animation: fadeIn .35s ease both; }
+    .completion-hero { text-align: center; width: min(850px, calc(100% - 40px)); margin: 0 auto 34px; position: relative; z-index: 1; padding-top: 54px; }
+    .completion h1 { margin-bottom: 18px; }
+    .completion p { color: rgba(255,255,255,.76); font-size: 20px; font-weight: 600; line-height: 1.55; }
+    .answer-wrap { width: min(900px, calc(100% - 40px)); margin: 0 auto; position: relative; z-index: 1; }
+    details {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    summary {
+      padding: 18px 20px;
+      font-weight: 900;
+      color: white;
+      cursor: pointer;
+    }
+    .answer-body { padding: 0 20px 20px; color: rgba(255,255,255,.78); line-height: 1.65; white-space: pre-wrap; }
+    .completion-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .copy-status { text-align: center; color: var(--gold); font-weight: 900; min-height: 24px; margin-top: 14px; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 9px rgba(22,163,74,0); } 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); } }
+
+    @media (max-width: 780px) {
+      .steps, .metrics-grid, .marketing-grid, .jordan-grid, .lo-grid { grid-template-columns: 1fr; }
+      .topnav { align-items: flex-start; flex-direction: column; }
+      .bar-inner { grid-template-columns: 1fr auto; gap: 10px; padding: 12px 0; }
+      .progress-dots { grid-column: 1 / -1; }
+      .game-logo .logo-text { display: none; }
+      .bottom-inner { flex-direction: column; align-items: stretch; padding: 14px 0; }
+      .bottom-inner .primary-btn { width: 100%; }
+      .start-panel .primary-btn, .name-input { width: 100%; }
+      .hero { padding-top: 42px; }
+      .lo-facts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section id="landing" class="landing">
+    <div class="wrap">
+      <nav class="topnav" aria-label="Primary navigation">
+        <div class="logo"><span class="logo-mark">CMS</span><span>CMS Mortgage Solutions</span></div>
+        <a class="nav-email" href="mailto:hiring@cmsmortgage.com">hiring@cmsmortgage.com</a>
+      </nav>
+
+      <main class="hero">
+        <div class="eyebrow">The Prove It Challenge</div>
+        <h1>Think you can run sales at CMS?</h1>
+        <p>27 states. 115 loan officers. $147M pipeline. Prove you can move it.</p>
+        <div class="start-panel">
+          <input id="candidateName" class="name-input" type="text" placeholder="Your name" autocomplete="name" />
+          <button id="startBtn" class="primary-btn">Start the Challenge →</button>
+        </div>
+        <div id="nameError" class="form-error"></div>
+      </main>
+
+      <section class="steps" aria-label="How it works">
+        <article class="step"><div class="step-num">01</div><h3>Complete 5 levels</h3><p>Diagnose the business, triage the team, write the outreach, fix marketing, then build the 90-day plan.</p></article>
+        <article class="step"><div class="step-num">02</div><h3>Submit your answers</h3><p>Your work compiles into one clean submission email when you finish.</p></article>
+        <article class="step"><div class="step-num">03</div><h3>Auto-advance</h3><p>Strong candidates move directly to the final round interview with the COO.</p></article>
+      </section>
+
+      <section class="about-card">
+        <h2>About CMS</h2>
+        <p>CMS Mortgage Solutions is a 27-state mortgage company, not a bank. We are production-first, operator-led, and in the middle of a real transformation. This role is for someone who can turn scattered activity into measurable loan officer growth.</p>
+      </section>
+      <footer class="footer">hiring@cmsmortgage.com</footer>
+    </div>
+  </section>
+
+  <section id="game" class="game">
+    <div class="game-topbar">
+      <div class="bar-inner">
+        <div class="logo game-logo"><span class="logo-mark">CMS</span><span class="logo-text">CMS Mortgage Solutions</span></div>
+        <div id="levelIndicator" class="level-indicator">Level 1 of 5</div>
+        <div id="timer" class="timer">00:00</div>
+        <div id="progressDots" class="progress-dots" aria-label="Progress dots"></div>
+      </div>
+    </div>
+
+    <main class="game-main">
+      <section id="level1" class="level active" data-level="1">
+        <div class="level-head">
+          <div class="level-tag">Level 1</div>
+          <h2>Diagnose the Real Problem</h2>
+          <p>The COO hands you the data and says the company has a production problem. Your job is to name what is actually broken.</p>
+          <div class="quote">“We have a production problem. Tell me what's actually wrong.”</div>
+        </div>
+        <div class="data-card">
+          <h3>LO Production — Last 90 Days</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>LO Name</th><th>Units Closed</th><th>Units in Pipeline</th><th>Referral Partners</th><th>Last Closed Loan</th></tr></thead>
+              <tbody id="productionRows"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="data-card">
+          <h3>Company Totals</h3>
+          <div class="metrics-grid">
+            <div class="metric"><strong>312</strong><span>Total closed units</span></div>
+            <div class="metric"><strong>2.7</strong><span>Average per LO</span></div>
+            <div class="metric"><strong>62%</strong><span>Production from top 10 LOs</span></div>
+            <div class="metric"><strong>28</strong><span>Combined units from bottom 40 LOs</span></div>
+          </div>
+        </div>
+        <div class="data-card">
+          <h3>Marketing + Recruiting</h3>
+          <div class="marketing-grid">
+            <div class="marketing-metric"><strong>3</strong><span>Newsletters, 22% open rate</span></div>
+            <div class="marketing-metric"><strong>14</strong><span>Instagram posts, 180 likes avg</span></div>
+            <div class="marketing-metric"><strong>1</strong><span>LinkedIn post, 186 impressions</span></div>
+            <div class="marketing-metric"><strong>0</strong><span>Paid campaigns, co-marketing, events</span></div>
+            <div class="marketing-metric"><strong>12</strong><span>Recruiting inbound inquiries</span></div>
+            <div class="marketing-metric"><strong>3</strong><span>Converted recruits</span></div>
+            <div class="marketing-metric"><strong>4</strong><span>Ghosted candidates</span></div>
+            <div class="marketing-metric"><strong>47d</strong><span>Average pending recruiting age</span></div>
+          </div>
+        </div>
+        <div class="input-card">
+          <h3>Identify the top 3 problems</h3>
+          <label for="problem1">Problem 1: What is it? What's the evidence? Why does it matter?</label>
+          <textarea id="problem1" data-save="level1.problem1" placeholder="Name the problem, cite the evidence, explain the consequence."></textarea>
+          <div class="hint">Minimum 80 characters</div>
+        </div>
+        <div class="input-card">
+          <label for="problem2">Problem 2</label>
+          <textarea id="problem2" data-save="level1.problem2" placeholder="Name the problem, cite the evidence, explain the consequence."></textarea>
+          <div class="hint">Minimum 80 characters</div>
+        </div>
+        <div class="input-card">
+          <label for="problem3">Problem 3</label>
+          <textarea id="problem3" data-save="level1.problem3" placeholder="Name the problem, cite the evidence, explain the consequence."></textarea>
+          <div class="hint">Minimum 80 characters</div>
+        </div>
+        <div id="level1Error" class="error-line"></div>
+      </section>
+
+      <section id="level2" class="level" data-level="2">
+        <div class="level-head"><div class="level-tag">Level 2</div><h2>Triage — Who Do You Touch First?</h2><p>Categorize every loan officer. Protect the engines, activate hidden leverage, and evaluate the low-signal situations.</p></div>
+        <div id="loGrid" class="lo-grid"></div>
+        <div class="input-card">
+          <label for="firstCall">Which LO from your Activate bucket is your first phone call — and why?</label>
+          <textarea id="firstCall" data-save="level2.firstCall"></textarea>
+          <div class="hint">Minimum 80 characters</div>
+        </div>
+        <div class="input-card">
+          <label for="thirtyDay">What specifically do you do with them in the next 30 days?</label>
+          <textarea id="thirtyDay" data-save="level2.thirtyDay"></textarea>
+          <div class="hint">Minimum 80 characters</div>
+        </div>
+        <div id="level2Error" class="error-line"></div>
+      </section>
+
+      <section id="level3" class="level" data-level="3">
+        <div class="level-head"><div class="level-tag">Level 3</div><h2>Write the Outreach</h2><p>Strategy is cheap. Write the actual message you would send to start the conversation with Jordan Holloway.</p></div>
+        <div class="jordan-card">
+          <h3>Jordan Holloway</h3>
+          <div class="jordan-grid">
+            <div class="jordan-stat"><strong>22</strong><span>Loans in pipeline, one of the biggest in the company</span></div>
+            <div class="jordan-stat"><strong>6</strong><span>Closed in the last 90 days</span></div>
+            <div class="jordan-stat"><strong>1</strong><span>Active referral partner, heavy concentration risk</span></div>
+            <div class="jordan-stat"><strong>31d</strong><span>Since last closed loan</span></div>
+          </div>
+        </div>
+        <div class="input-card">
+          <label>Select medium</label>
+          <div class="medium-row" id="mediumRow">
+            <button type="button" class="pill-btn medium" data-medium="Email">Email</button>
+            <button type="button" class="pill-btn medium" data-medium="Text">Text</button>
+            <button type="button" class="pill-btn medium" data-medium="Slack">Slack</button>
+          </div>
+          <div class="reminder">No corporate language. No fake energy. You're not their therapist — you're their exec. Write it like it matters.</div>
+          <label for="outreachMessage">Your message to Jordan</label>
+          <textarea id="outreachMessage" data-save="level3.message" maxlength="600" placeholder="Write the real message."></textarea>
+          <div id="charCounter" class="counter">0 / 600</div>
+        </div>
+        <div id="level3Error" class="error-line"></div>
+      </section>
+
+      <section id="level4" class="level" data-level="4">
+        <div class="level-head"><div class="level-tag">Level 4</div><h2>Fix the Marketing</h2><p>Build a 30-day plan with zero additional budget. Use what already exists, but make it drive production.</p></div>
+        <div class="data-card">
+          <h3>Current Marketing Reality</h3>
+          <div class="marketing-grid">
+            <div class="marketing-metric"><strong>3</strong><span>Newsletters, 22% open rate</span></div>
+            <div class="marketing-metric"><strong>14</strong><span>Instagram posts, 180 likes avg</span></div>
+            <div class="marketing-metric"><strong>1</strong><span>LinkedIn post, 186 impressions</span></div>
+            <div class="marketing-metric"><strong>0</strong><span>Paid campaigns</span></div>
+            <div class="marketing-metric"><strong>0</strong><span>Co-marketing</span></div>
+            <div class="marketing-metric"><strong>0</strong><span>Events</span></div>
+          </div>
+        </div>
+        <div class="data-card"><h3>Required: 4 initiatives minimum</h3><p style="color:#64748b;font-weight:700;line-height:1.55;margin:0;">Must include 2+ existing channels, 1 referral partner co-marketing idea, and 1 recruiting initiative.</p></div>
+        <div id="initiativeGrid" class="initiative-grid"></div>
+        <div id="level4Error" class="error-line"></div>
+      </section>
+
+      <section id="level5" class="level" data-level="5">
+        <div class="level-head"><div class="level-tag">Level 5</div><h2>The 90-Day Plan</h2><p>The COO asks: “Tell me what this looks like in 90 days if you do your job.”</p></div>
+        <div class="phase-card">
+          <h3>Days 1–30: Stabilize</h3>
+          <label for="phase30">What are you doing? What do you NOT touch? First measurable result?</label>
+          <textarea id="phase30" data-save="level5.phase30"></textarea>
+          <div class="hint">Minimum 60 characters</div>
+        </div>
+        <div class="phase-card green">
+          <h3>Days 31–60: Build</h3>
+          <label for="phase60">What systems go in? What does pipeline look like?</label>
+          <textarea id="phase60" data-save="level5.phase60"></textarea>
+          <div class="hint">Minimum 60 characters</div>
+        </div>
+        <div class="phase-card blue">
+          <h3>Days 61–90: Scale</h3>
+          <label for="phase90">What's different? What changed?</label>
+          <textarea id="phase90" data-save="level5.phase90"></textarea>
+          <div class="hint">Minimum 60 characters</div>
+        </div>
+        <div class="proof-number">
+          <label for="proofNumber">The one number that proves it's working:</label>
+          <input id="proofNumber" type="text" data-save="level5.proofNumber" placeholder="e.g. 18 funded units from activated LOs by day 90" />
+        </div>
+        <div id="level5Error" class="error-line"></div>
+      </section>
+    </main>
+
+    <div class="bottom-bar">
+      <div class="bottom-inner">
+        <div class="autosave"><span class="pulse"></span><span id="saveStatus">Auto-saving...</span></div>
+        <button id="completeBtn" class="primary-btn" disabled>Complete Level 1 →</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="completion" class="completion">
+    <div class="completion-hero">
+      <div class="eyebrow">Challenge Complete</div>
+      <h1>You made it.</h1>
+      <p id="completionTime">Time taken: 00:00</p>
+    </div>
+    <div class="answer-wrap">
+      <div id="answerCards"></div>
+      <div class="completion-actions">
+        <button id="submitBtn" class="primary-btn">Submit Your Challenge</button>
+        <button id="copyBtn" class="secondary-btn">Copy all answers</button>
+      </div>
+      <div id="copyStatus" class="copy-status"></div>
+    </div>
+  </section>
+
+  <div id="resumeModal" class="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resumeTitle">
+    <div class="modal-card">
+      <h2 id="resumeTitle">Resume your challenge?</h2>
+      <p>We found saved work in this browser. You can pick up where you left off or start clean.</p>
+      <div class="modal-actions">
+        <button id="resumeBtn" class="primary-btn">Resume</button>
+        <button id="freshBtn" class="light-btn">Start fresh</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'cmsProveItChallengeV1';
+    const MIN80 = 80;
+    const MIN60 = 60;
+    const loData = [
+      ['Marcus Webb', 14, 18, '6 active realtors', '4 days ago'],
+      ['Tanya Rhodes', 11, 12, '4 active realtors', '8 days ago'],
+      ['Devon Park', 9, 15, '2 active realtors', '12 days ago'],
+      ['Simone Castro', 7, 8, '5 active realtors', '6 days ago'],
+      ['Jordan Holloway', 6, 22, '1 active realtor', '31 days ago'],
+      ['Brianna Osei', 5, 9, '3 active realtors', '19 days ago'],
+      ['Chris Navarro', 4, 11, '0 active realtors', '47 days ago'],
+      ['Alexis Turner', 3, 7, '1 active realtor', '62 days ago'],
+      ['Ray Montgomery', 2, 19, '0 active realtors', '89 days ago'],
+      ['Kayla Jennings', 1, 4, '0 active realtors', '104 days ago']
+    ];
+
+    let state = {
+      name: '', currentLevel: 1, startedAt: null, completedAt: null,
+      level1: { problem1: '', problem2: '', problem3: '' },
+      level2: { categories: {}, firstCall: '', thirtyDay: '' },
+      level3: { medium: '', message: '' },
+      level4: { initiatives: Array.from({ length: 4 }, () => ({ name: '', description: '', target: '' })) },
+      level5: { phase30: '', phase60: '', phase90: '', proofNumber: '' }
+    };
+    let timerInterval;
+
+    const $ = (id) => document.getElementById(id);
+    const len = (value) => (value || '').trim().length;
+
+    function cloneDefault() {
+      return {
+        name: '', currentLevel: 1, startedAt: null, completedAt: null,
+        level1: { problem1: '', problem2: '', problem3: '' },
+        level2: { categories: {}, firstCall: '', thirtyDay: '' },
+        level3: { medium: '', message: '' },
+        level4: { initiatives: Array.from({ length: 4 }, () => ({ name: '', description: '', target: '' })) },
+        level5: { phase30: '', phase60: '', phase90: '', proofNumber: '' }
+      };
+    }
+
+    function init() {
+      renderProductionRows();
+      renderDots();
+      renderLoCards();
+      renderInitiatives();
+      bindEvents();
+      const saved = loadSaved();
+      if (saved && saved.startedAt && !saved.completedAt) $('resumeModal').classList.add('active');
+      validateCurrentLevel();
+    }
+
+    function bindEvents() {
+      $('startBtn').addEventListener('click', startFreshFromLanding);
+      $('candidateName').addEventListener('keydown', (e) => { if (e.key === 'Enter') startFreshFromLanding(); });
+      $('resumeBtn').addEventListener('click', resumeSaved);
+      $('freshBtn').addEventListener('click', () => { localStorage.removeItem(STORAGE_KEY); state = cloneDefault(); $('resumeModal').classList.remove('active'); });
+      $('completeBtn').addEventListener('click', completeLevel);
+      $('copyBtn').addEventListener('click', copyAnswers);
+      $('submitBtn').addEventListener('click', submitChallenge);
+
+      document.querySelectorAll('[data-save]').forEach((field) => {
+        field.addEventListener('input', () => {
+          saveField(field);
+          if (field.id === 'outreachMessage') updateCounter();
+          autosave();
+          validateCurrentLevel();
+        });
+      });
+
+      document.querySelectorAll('[data-medium]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.level3.medium = btn.dataset.medium;
+          updateMediumButtons();
+          autosave();
+          validateCurrentLevel();
+        });
+      });
+    }
+
+    function startFreshFromLanding() {
+      const name = $('candidateName').value.trim();
+      if (!name) { $('nameError').textContent = 'Add your name first. The submission email needs it.'; return; }
+      state = cloneDefault();
+      state.name = name;
+      state.startedAt = Date.now();
+      state.currentLevel = 1;
+      autosave();
+      showGame();
+    }
+
+    function resumeSaved() {
+      const saved = loadSaved();
+      if (saved) state = normalizeState(saved);
+      $('candidateName').value = state.name || '';
+      restoreInputs();
+      $('resumeModal').classList.remove('active');
+      showGame();
+    }
+
+    function showGame() {
+      $('landing').classList.add('hidden');
+      $('completion').classList.remove('active');
+      $('game').classList.add('active');
+      renderLevel();
+      startTimer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderProductionRows() {
+      $('productionRows').innerHTML = loData.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
+    }
+
+    function renderDots() {
+      $('progressDots').innerHTML = [1,2,3,4,5].map(i => `<span class="dot" data-dot="${i}"></span>`).join('');
+    }
+
+    function renderLoCards() {
+      $('loGrid').innerHTML = loData.map((lo, index) => {
+        const safeName = lo[0].replace(/\s+/g, '-').toLowerCase();
+        return `<article class="lo-card" id="lo-${safeName}">
+          <h3>${lo[0]}</h3>
+          <div class="lo-facts">
+            <div><strong>${lo[1]}</strong> closed</div>
+            <div><strong>${lo[2]}</strong> pipeline</div>
+            <div><strong>${lo[3].split(' ')[0]}</strong> ${lo[3].replace(/^\d+\s*/, '')}</div>
+            <div><strong>${lo[4].split(' ')[0]}</strong> days since close</div>
+          </div>
+          <div class="choice-row">
+            <button type="button" class="pill-btn protect" data-lo="${lo[0]}" data-category="protect">Protect</button>
+            <button type="button" class="pill-btn activate" data-lo="${lo[0]}" data-category="activate">Activate</button>
+            <button type="button" class="pill-btn evaluate" data-lo="${lo[0]}" data-category="evaluate">Evaluate</button>
+          </div>
+        </article>`;
+      }).join('');
+      document.querySelectorAll('[data-lo]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.level2.categories[btn.dataset.lo] = btn.dataset.category;
+          updateLoCards();
+          autosave();
+          validateCurrentLevel();
+        });
+      });
+    }
+
+    function renderInitiatives() {
+      $('initiativeGrid').innerHTML = [0,1,2,3].map(i => `<div class="initiative-card">
+        <h3>Initiative ${i + 1}</h3>
+        <label for="initiativeName${i}">Initiative name</label>
+        <input id="initiativeName${i}" type="text" data-initiative="${i}" data-field="name" placeholder="e.g. Realtor Co-Marketing Series" />
+        <label for="initiativeDesc${i}" style="margin-top:14px;">Description</label>
+        <textarea id="initiativeDesc${i}" data-initiative="${i}" data-field="description" placeholder="2 sentences"></textarea>
+        <div class="hint">Minimum 40 characters</div>
+        <label for="initiativeTarget${i}" style="margin-top:14px;">Target result</label>
+        <input id="initiativeTarget${i}" type="text" data-initiative="${i}" data-field="target" placeholder="e.g. 3 new referral partners by week 4" />
+      </div>`).join('');
+      document.querySelectorAll('[data-initiative]').forEach(field => {
+        field.addEventListener('input', () => {
+          const i = Number(field.dataset.initiative);
+          state.level4.initiatives[i][field.dataset.field] = field.value;
+          autosave();
+          validateCurrentLevel();
+        });
+      });
+    }
+
+    function saveField(field) {
+      const path = field.dataset.save.split('.');
+      state[path[0]][path[1]] = field.value;
+    }
+
+    function restoreInputs() {
+      $('candidateName').value = state.name || '';
+      document.querySelectorAll('[data-save]').forEach(field => {
+        const [group, key] = field.dataset.save.split('.');
+        field.value = state[group]?.[key] || '';
+      });
+      state.level4.initiatives.forEach((item, i) => {
+        const n = $(`initiativeName${i}`), d = $(`initiativeDesc${i}`), t = $(`initiativeTarget${i}`);
+        if (n) n.value = item.name || '';
+        if (d) d.value = item.description || '';
+        if (t) t.value = item.target || '';
+      });
+      updateLoCards();
+      updateMediumButtons();
+      updateCounter();
+    }
+
+    function renderLevel() {
+      document.querySelectorAll('.level').forEach(level => level.classList.toggle('active', Number(level.dataset.level) === state.currentLevel));
+      $('levelIndicator').textContent = `Level ${state.currentLevel} of 5`;
+      $('completeBtn').textContent = state.currentLevel === 5 ? 'Complete Challenge →' : `Complete Level ${state.currentLevel} →`;
+      document.querySelectorAll('.dot').forEach(dot => dot.classList.toggle('done', Number(dot.dataset.dot) < state.currentLevel));
+      restoreInputs();
+      validateCurrentLevel();
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 20);
+    }
+
+    function validateCurrentLevel() {
+      let ok = false;
+      clearErrors();
+      if (state.currentLevel === 1) {
+        ok = ['problem1','problem2','problem3'].every(k => len(state.level1[k]) >= MIN80);
+        if (!ok) $('level1Error').textContent = 'Each problem card needs at least 80 characters.';
+      }
+      if (state.currentLevel === 2) {
+        ok = loData.every(lo => state.level2.categories[lo[0]]) && len(state.level2.firstCall) >= MIN80 && len(state.level2.thirtyDay) >= MIN80;
+        if (!ok) $('level2Error').textContent = 'Categorize all 10 LOs and complete both written answers.';
+      }
+      if (state.currentLevel === 3) {
+        const count = len(state.level3.message);
+        ok = !!state.level3.medium && count >= MIN80 && count <= 600;
+        if (!ok) $('level3Error').textContent = 'Choose a medium and write 80–600 characters.';
+      }
+      if (state.currentLevel === 4) {
+        ok = state.level4.initiatives.every(i => len(i.name) > 0 && len(i.description) >= 40 && len(i.target) > 0);
+        if (!ok) $('level4Error').textContent = 'Fill all 4 initiatives. Descriptions need at least 40 characters.';
+      }
+      if (state.currentLevel === 5) {
+        ok = len(state.level5.phase30) >= MIN60 && len(state.level5.phase60) >= MIN60 && len(state.level5.phase90) >= MIN60 && len(state.level5.proofNumber) > 0;
+        if (!ok) $('level5Error').textContent = 'Each 90-day section needs at least 60 characters and the proof number is required.';
+      }
+      $('completeBtn').disabled = !ok;
+      return ok;
+    }
+
+    function clearErrors() {
+      [1,2,3,4,5].forEach(i => { const el = $(`level${i}Error`); if (el) el.textContent = ''; });
+    }
+
+    function completeLevel() {
+      if (!validateCurrentLevel()) return;
+      if (state.currentLevel < 5) {
+        state.currentLevel += 1;
+        autosave();
+        renderLevel();
+      } else {
+        state.completedAt = Date.now();
+        autosave();
+        showCompletion();
+      }
+    }
+
+    function updateLoCards() {
+      loData.forEach(lo => {
+        const category = state.level2.categories[lo[0]];
+        const id = `lo-${lo[0].replace(/\s+/g, '-').toLowerCase()}`;
+        const card = $(id);
+        if (!card) return;
+        card.classList.remove('protect', 'activate', 'evaluate');
+        if (category) card.classList.add(category);
+        card.querySelectorAll('[data-category]').forEach(btn => btn.classList.toggle('active', btn.dataset.category === category));
+      });
+    }
+
+    function updateMediumButtons() {
+      document.querySelectorAll('[data-medium]').forEach(btn => btn.classList.toggle('active', btn.dataset.medium === state.level3.medium));
+    }
+
+    function updateCounter() {
+      const count = ($('outreachMessage').value || '').length;
+      $('charCounter').textContent = `${count} / 600`;
+      $('charCounter').classList.toggle('bad', count > 600 || (count > 0 && count < 80));
+    }
+
+    function autosave() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      $('saveStatus').textContent = 'Auto-saving...';
+      clearTimeout(window.saveTimer);
+      window.saveTimer = setTimeout(() => { if ($('saveStatus')) $('saveStatus').textContent = 'Saved'; }, 450);
+    }
+
+    function loadSaved() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+    }
+
+    function normalizeState(saved) {
+      const base = cloneDefault();
+      const merged = { ...base, ...saved };
+      merged.level1 = { ...base.level1, ...(saved.level1 || {}) };
+      merged.level2 = { ...base.level2, ...(saved.level2 || {}), categories: { ...((saved.level2 && saved.level2.categories) || {}) } };
+      merged.level3 = { ...base.level3, ...(saved.level3 || {}) };
+      merged.level4 = { ...base.level4, ...(saved.level4 || {}) };
+      if (!Array.isArray(merged.level4.initiatives) || merged.level4.initiatives.length !== 4) merged.level4.initiatives = base.level4.initiatives;
+      merged.level5 = { ...base.level5, ...(saved.level5 || {}) };
+      return merged;
+    }
+
+    function startTimer() {
+      if (!state.startedAt) state.startedAt = Date.now();
+      clearInterval(timerInterval);
+      const tick = () => $('timer').textContent = formatTime(Date.now() - state.startedAt);
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    function formatTime(ms) {
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      return h ? `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function showCompletion() {
+      clearInterval(timerInterval);
+      $('game').classList.remove('active');
+      $('landing').classList.add('hidden');
+      $('completion').classList.add('active');
+      $('completionTime').textContent = `Time taken: ${formatTime((state.completedAt || Date.now()) - state.startedAt)}`;
+      $('answerCards').innerHTML = buildAnswerCards();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function buildAnswerCards() {
+      const sections = [
+        ['Level 1: Diagnose the Real Problem', `Problem 1:\n${state.level1.problem1}\n\nProblem 2:\n${state.level1.problem2}\n\nProblem 3:\n${state.level1.problem3}`],
+        ['Level 2: Triage', `Categories:\n${Object.entries(state.level2.categories).map(([name, cat]) => `${name}: ${title(cat)}`).join('\n')}\n\nFirst phone call:\n${state.level2.firstCall}\n\n30-day action:\n${state.level2.thirtyDay}`],
+        ['Level 3: Write the Outreach', `Medium: ${state.level3.medium}\n\nMessage:\n${state.level3.message}`],
+        ['Level 4: Fix the Marketing', state.level4.initiatives.map((i, idx) => `Initiative ${idx + 1}: ${i.name}\nDescription: ${i.description}\nTarget: ${i.target}`).join('\n\n')],
+        ['Level 5: The 90-Day Plan', `Days 1–30: Stabilize\n${state.level5.phase30}\n\nDays 31–60: Build\n${state.level5.phase60}\n\nDays 61–90: Scale\n${state.level5.phase90}\n\nThe one number that proves it is working:\n${state.level5.proofNumber}`]
+      ];
+      return sections.map(([titleText, body], idx) => `<details ${idx === 0 ? 'open' : ''}><summary>${titleText}</summary><div class="answer-body">${escapeHtml(body)}</div></details>`).join('');
+    }
+
+    function title(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+    function escapeHtml(str) { return (str || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    function buildEmailBody() {
+      return `Candidate: ${state.name}\nTime taken: ${formatTime((state.completedAt || Date.now()) - state.startedAt)}\n\n${[
+        `LEVEL 1 — DIAGNOSE THE REAL PROBLEM\n\nProblem 1:\n${state.level1.problem1}\n\nProblem 2:\n${state.level1.problem2}\n\nProblem 3:\n${state.level1.problem3}`,
+        `LEVEL 2 — TRIAGE\n\nCategories:\n${Object.entries(state.level2.categories).map(([name, cat]) => `${name}: ${title(cat)}`).join('\n')}\n\nFirst phone call:\n${state.level2.firstCall}\n\n30-day action:\n${state.level2.thirtyDay}`,
+        `LEVEL 3 — WRITE THE OUTREACH\n\nMedium: ${state.level3.medium}\n\nMessage:\n${state.level3.message}`,
+        `LEVEL 4 — FIX THE MARKETING\n\n${state.level4.initiatives.map((i, idx) => `Initiative ${idx + 1}: ${i.name}\nDescription: ${i.description}\nTarget: ${i.target}`).join('\n\n')}`,
+        `LEVEL 5 — THE 90-DAY PLAN\n\nDays 1–30: Stabilize\n${state.level5.phase30}\n\nDays 31–60: Build\n${state.level5.phase60}\n\nDays 61–90: Scale\n${state.level5.phase90}\n\nThe one number that proves it's working:\n${state.level5.proofNumber}`
+      ].join('\n\n------------------------------\n\n')}`;
+    }
+
+    function submitChallenge() {
+      const subject = encodeURIComponent(`Sales Challenge — ${state.name || 'Candidate'}`);
+      const body = encodeURIComponent(buildEmailBody());
+      window.location.href = `mailto:hiring@cmsmortgage.com?subject=${subject}&body=${body}`;
+    }
+
+    async function copyAnswers() {
+      try {
+        await navigator.clipboard.writeText(buildEmailBody());
+        $('copyStatus').textContent = 'Copied. Paste it into your email if mailto gives you attitude.';
+      } catch (err) {
+        $('copyStatus').textContent = 'Copy failed. Open each card and copy manually.';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
