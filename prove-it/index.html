@@ -133,7 +133,14 @@
       font-weight: 700;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
     }
-    .name-input::placeholder { color: rgba(255,255,255,.45); }
+    .name-input::placeholder { color: rgba(255,255,255,.52); }
+    .field-help {
+      margin: 10px 0 0;
+      color: rgba(250,248,243,.72);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
     .primary-btn, .secondary-btn {
       border: 0;
       border-radius: var(--radius);
@@ -490,9 +497,10 @@
         <h1>Think you can run sales at CMS?</h1>
         <p>27 states. 115 loan officers. $147M pipeline. Prove you can move it.</p>
         <div class="start-panel">
-          <input id="candidateName" class="name-input" type="text" placeholder="Your name" autocomplete="name" />
+          <input id="candidateName" class="name-input" type="text" placeholder="Full name — e.g. Jordan Smith" autocomplete="name" aria-describedby="nameHelp" />
           <button id="startBtn" class="primary-btn">Start the Challenge →</button>
         </div>
+        <p id="nameHelp" class="field-help">Enter the name you want attached to your final submission email.</p>
         <div id="nameError" class="form-error"></div>
       </main>
 
@@ -783,7 +791,7 @@
 
     function startFreshFromLanding() {
       const name = $('candidateName').value.trim();
-      if (!name) { $('nameError').textContent = 'Add your name first. The submission email needs it.'; return; }
+      if (!name) { $('nameError').textContent = 'Add your full name first. This is how we label your final submission.'; return; }
       state = cloneDefault();
       state.name = name;
       state.startedAt = Date.now();
